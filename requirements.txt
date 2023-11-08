@@ -1,0 +1,5 @@
+openai==1.1.1
+tiktoken
+python-dotenv
+Pillow
+ipython
