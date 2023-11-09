@@ -36,20 +36,45 @@ message = client.beta.threads.messages.create(
 # Step 4: Run the Assistant
 
 run = client.beta.threads.runs.create(
-  thread_id=thread.id,
-  assistant_id=assistant.id,
-  instructions="Please address the user as Jane Doe. The user has a premium account."
+    thread_id=thread.id,
+    assistant_id=assistant.id,
+    instructions="Please address the user as Jane Doe. The user has a premium account."
 )
 
 # Step 5: Display the Assistant's Response
 run = client.beta.threads.runs.retrieve(
-  thread_id=thread.id,
-  run_id=run.id
+    thread_id=thread.id,
+    run_id=run.id
 )
 
-time. sleep(10)
+time.sleep(10)
 
 messages = client.beta.threads.messages.list(
-  thread_id=thread.id
+    thread_id=thread.id
 )
-print(messages.data[0].content)
+print("answer to the first question is ", messages.data[0].content)
+
+# Step 6: Add another Message to a Thread
+message = client.beta.threads.messages.create(
+    thread_id=thread.id,
+    role="user",
+    content="I need to solve the equation `5x + 10 = 40`. Can you help me? "
+)
+
+run = client.beta.threads.runs.create(
+    thread_id=thread.id,
+    assistant_id=assistant.id,
+    instructions="Please address the user as Jane Doe. The user has a premium account."
+)
+
+run = client.beta.threads.runs.retrieve(
+    thread_id=thread.id,
+    run_id=run.id
+)
+
+time.sleep(10)
+
+messages = client.beta.threads.messages.list(
+    thread_id=thread.id
+)
+print("answer to the 2nd question is ", messages.data[0].content)
