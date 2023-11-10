@@ -29,32 +29,48 @@ assistant = client.beta.assistants.create(
 thread = client.beta.threads.create()
 
 user_message = st.text_input("Pls enter your question:")
+submit = st.button("submit", type="primary")
 
-# Step 3: Add a Message to a Thread
-message = client.beta.threads.messages.create(
-    thread_id=thread.id,
-    role="user",
-    content=user_message
-)
+if submit:
+    # Step 3: Add a Message to a Thread
+    message = client.beta.threads.messages.create(
+        thread_id=thread.id,
+        role="user",
+        content=user_message
+    )
 
-# Step 4: Run the Assistant
+    # Step 4: Run the Assistant
 
-run = client.beta.threads.runs.create(
-    thread_id=thread.id,
-    assistant_id=assistant.id,
-    instructions="Please address the user as Jane Doe. The user has a premium account."
-)
+    run = client.beta.threads.runs.create(
+        thread_id=thread.id,
+        assistant_id=assistant.id,
+        instructions="Please address the user as Jane Doe. The user has a premium account."
+    )
 
-# Step 5: Display the Assistant's Response
-run = client.beta.threads.runs.retrieve(
-    thread_id=thread.id,
-    run_id=run.id
-)
+    # Step 5: Display the Assistant's Response
+    run = client.beta.threads.runs.retrieve(
+        thread_id=thread.id,
+        run_id=run.id
+    )
 
-time.sleep(10)
+    time.sleep(10)
 
-messages = client.beta.threads.messages.list(
-    thread_id=thread.id
-)
+    messages = client.beta.threads.messages.list(
+        thread_id=thread.id
+    )
 
-st.write("Answer to the Question is ", messages.data[0].content)
+    run_steps = client.beta.threads.runs.steps.list(
+            thread_id=thread.id,
+            run_id=run.id
+        )
+
+    if run_steps.data[0].status == "completed":
+        print("The run was successful!")
+        messages = client.beta.threads.messages.list(
+                thread_id=thread.id
+        )
+        for message in messages.data:
+            print(message.role.upper(), message.content[0].text.value)
+            role = message.role.upper()
+            content = message.content[0].text.value
+            st.write(role, " : ", content)
