@@ -1,14 +1,16 @@
 import openai
 import os
+import time
+import streamlit as st
+
 from dotenv import load_dotenv
 from openai import OpenAI
-import time
 
 load_dotenv()
 
 openai.api_key = os.environ["OPENAI_API_KEY"]
 
-print(openai.api_key)
+st.header("OpenAI Code Interpreter Assistant! ")
 
 #  tools : Code Interpreter, Retrieval, and Function calling
 client = OpenAI(
@@ -26,11 +28,13 @@ assistant = client.beta.assistants.create(
 # Step 2: Create a thread
 thread = client.beta.threads.create()
 
+user_message = st.text_input("Pls enter your question:")
+
 # Step 3: Add a Message to a Thread
 message = client.beta.threads.messages.create(
     thread_id=thread.id,
     role="user",
-    content="I need to solve the equation `3x + 11 = 14`. Can you help me?"
+    content=user_message
 )
 
 # Step 4: Run the Assistant
@@ -52,29 +56,5 @@ time.sleep(10)
 messages = client.beta.threads.messages.list(
     thread_id=thread.id
 )
-print("answer to the first question is ", messages.data[0].content)
 
-# Step 6: Add another Message to a Thread
-message = client.beta.threads.messages.create(
-    thread_id=thread.id,
-    role="user",
-    content="I need to solve the equation `5x + 10 = 40`. Can you help me? "
-)
-
-run = client.beta.threads.runs.create(
-    thread_id=thread.id,
-    assistant_id=assistant.id,
-    instructions="Please address the user as Jane Doe. The user has a premium account."
-)
-
-run = client.beta.threads.runs.retrieve(
-    thread_id=thread.id,
-    run_id=run.id
-)
-
-time.sleep(10)
-
-messages = client.beta.threads.messages.list(
-    thread_id=thread.id
-)
-print("answer to the 2nd question is ", messages.data[0].content)
+st.write("Answer to the Question is ", messages.data[0].content)

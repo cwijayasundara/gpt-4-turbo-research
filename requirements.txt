@@ -3,3 +3,7 @@ tiktoken
 python-dotenv
 Pillow
 ipython
+moviepy
+pytube
+opencv-python
+streamlit

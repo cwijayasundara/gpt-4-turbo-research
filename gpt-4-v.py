@@ -19,7 +19,7 @@ def encode_image(image_path):
 
 
 # Path to your image
-image_path = "images/accedent.png"
+image_path = "images/img.png"
 
 # Getting the base64 string
 base64_image = encode_image(image_path)
@@ -37,7 +37,8 @@ payload = {
             "content": [
                 {
                     "type": "text",
-                    "text": "Describe what’s in this image in detail as a story?"
+                    "text": "System: You an expert in reading barcodes"
+                            "Can you read the barcode of the given image?"
                 },
                 {
                     "type": "image_url",
