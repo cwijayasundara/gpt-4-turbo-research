@@ -1,6 +1,7 @@
 import openai
 import os
 import time
+import json
 
 from dotenv import load_dotenv
 from openai import OpenAI
@@ -9,12 +10,33 @@ load_dotenv()
 
 openai.api_key = os.environ["OPENAI_API_KEY"]
 
-# st.header("OpenAI Code Interpreter Assistant! ")
-
 #  tools : Code Interpreter, Retrieval, and Function calling
 client = OpenAI(
     api_key=os.environ.get("OPENAI_API_KEY"),
 )
+
+
+def get_current_weather(location, unit="fahrenheit"):
+    print('get current weather called')
+    """Get the current weather in a given location"""
+    if "tokyo" in location.lower():
+        return json.dumps({"location": location, "temperature": "10", "unit": "celsius"})
+    elif "san francisco" in location.lower():
+        return json.dumps({"location": location, "temperature": "72", "unit": "fahrenheit"})
+    else:
+        return json.dumps({"location": location, "temperature": "22", "unit": "celsius"})
+
+
+def getNickname(location):
+    print('get nickname called')
+    """Get the nickname of a given location"""
+    if "tokyo" in location.lower():
+        return json.dumps({"location": location, "nickname": "The Big Sushi"})
+    elif "san francisco" in location.lower():
+        return json.dumps({"location": location, "nickname": "The Golden City"})
+    else:
+        return json.dumps({"location": location, "nickname": "The Big Apple"})
+
 
 assistant = client.beta.assistants.create(
     instructions="You are a weather bot. Use the provided functions to answer questions.",
@@ -64,7 +86,7 @@ run = client.beta.threads.runs.create(
     instructions="Please address the user as Jane Doe. The user has a premium account."
 )
 
-time.sleep(60)
+time.sleep(20)
 
 run_steps = client.beta.threads.runs.steps.list(
     thread_id=thread.id,

@@ -24,29 +24,33 @@ def get_current_weather(location, unit="fahrenheit"):
         return json.dumps({"location": location, "temperature": "22", "unit": "celsius"})
 
 
+function_get_current_whether = {
+    "name": "get_current_weather",
+    "description": "Get the current weather in a given location",
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "location": {
+                "type": "string",
+                "description": "The city and state, e.g. San Francisco, CA",
+            },
+            "unit": {"type": "string", "enum": ["celsius", "fahrenheit"]},
+        },
+        "required": ["location"],
+    },
+}
+
+
 def run_conversation():
     # Step 1: send the conversation and available functions to the model
     messages = [{"role": "user", "content": "What's the weather like in Tokyo?"}]
     tools = [
         {
             "type": "function",
-            "function": {
-                "name": "get_current_weather",
-                "description": "Get the current weather in a given location",
-                "parameters": {
-                    "type": "object",
-                    "properties": {
-                        "location": {
-                            "type": "string",
-                            "description": "The city and state, e.g. San Francisco, CA",
-                        },
-                        "unit": {"type": "string", "enum": ["celsius", "fahrenheit"]},
-                    },
-                    "required": ["location"],
-                },
-            },
+            "function": function_get_current_whether,
         }
     ]
+
     response = openai.chat.completions.create(
         model="gpt-3.5-turbo-1106",
         messages=messages,
