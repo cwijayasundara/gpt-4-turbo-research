@@ -7,4 +7,3 @@ moviepy
 pytube
 opencv-python
 streamlit
-ffmpeg
